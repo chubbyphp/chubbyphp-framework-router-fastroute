@@ -12,7 +12,7 @@ use Chubbyphp\Framework\Middleware\RouterMiddleware;
 use Chubbyphp\Framework\RequestHandler\CallbackRequestHandler;
 use Chubbyphp\Framework\Router\FastRoute\Router;
 use Chubbyphp\Framework\Router\Route;
-use Chubbyphp\Framework\Router\RouteInterface;
+use Fig\Http\Message\RequestMethodInterface as RequestMethod;
 use Http\Factory\Guzzle\ResponseFactory as GuzzleResponseFactory;
 use Http\Factory\Guzzle\ServerRequestFactory as GuzzleServerRequestFactory;
 use Laminas\Diactoros\ResponseFactory as LaminasResponseFactory;
@@ -88,7 +88,7 @@ final class RouterTest extends TestCase
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
-            RouteInterface::GET,
+            RequestMethod::METHOD_GET,
             '/hello/test'
         );
 
@@ -121,7 +121,7 @@ final class RouterTest extends TestCase
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
-            RouteInterface::GET,
+            RequestMethod::METHOD_GET,
             '/hello'
         );
 
@@ -157,7 +157,7 @@ final class RouterTest extends TestCase
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
-            RouteInterface::POST,
+            RequestMethod::METHOD_POST,
             '/hello/test'
         );
 
@@ -189,7 +189,7 @@ final class RouterTest extends TestCase
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
-            RouteInterface::GET,
+            RequestMethod::METHOD_GET,
             '/hello/test'
         );
 
@@ -224,7 +224,7 @@ final class RouterTest extends TestCase
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
-            RouteInterface::GET,
+            RequestMethod::METHOD_GET,
             '/hello/test'
         );
 
