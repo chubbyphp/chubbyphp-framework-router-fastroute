@@ -22,22 +22,13 @@ final class Router implements RouterInterface
     /**
      * @var array<string, RouteInterface>
      */
-    private $routes;
+    private array $routes;
 
-    /**
-     * @var Dispatcher
-     */
-    private $dispatcher;
+    private Dispatcher $dispatcher;
 
-    /**
-     * @var RouteParser
-     */
-    private $routeParser;
+    private RouteParser $routeParser;
 
-    /**
-     * @var string
-     */
-    private $basePath;
+    private string $basePath;
 
     /**
      * @param array<RouteInterface> $routes
