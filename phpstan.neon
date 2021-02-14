@@ -1,5 +1,5 @@
 parameters:
     ignoreErrors:
         -
-            message: '#Undefined variable: \$routeIndex#'
+            message: '#Variable \$routeIndex might not be defined.#'
             path: %currentWorkingDirectory%/src/Router.php

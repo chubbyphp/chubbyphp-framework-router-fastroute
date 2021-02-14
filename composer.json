@@ -30,7 +30,7 @@
         "php-coveralls/php-coveralls": "^2.4.3",
         "phploc/phploc": "^7.0.2",
         "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "^0.12.64",
+        "phpstan/phpstan": "^0.12.76",
         "phpunit/phpunit": "^9.5",
         "slim/psr7": "^0.5|^1.0",
         "sunrise/http-factory": "^1.0.4"
