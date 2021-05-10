@@ -49,10 +49,11 @@ namespace App;
 use Chubbyphp\Framework\Application;
 use Chubbyphp\Framework\ErrorHandler;
 use Chubbyphp\Framework\Middleware\ExceptionMiddleware;
-use Chubbyphp\Framework\Middleware\RouterMiddleware;
+use Chubbyphp\Framework\Middleware\UrlMatcherMiddleware;
 use Chubbyphp\Framework\RequestHandler\CallbackRequestHandler;
-use Chubbyphp\Framework\Router\FastRoute\Router;
+use Chubbyphp\Framework\Router\FastRoute\UrlMatcher;
 use Chubbyphp\Framework\Router\Route;
+use Chubbyphp\Framework\Router\Routes;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\ServerRequestFactory;
@@ -65,7 +66,7 @@ $responseFactory = new ResponseFactory();
 
 $app = new Application([
     new ExceptionMiddleware($responseFactory, true),
-    new RouterMiddleware(new Router([
+    new UrlMatcherMiddleware(new UrlMatcher(new Routes([
         Route::get('/hello/{name:[a-z]+}', 'hello', new CallbackRequestHandler(
             function (ServerRequestInterface $request) use ($responseFactory) {
                 $name = $request->getAttribute('name');
@@ -75,7 +76,7 @@ $app = new Application([
                 return $response;
             }
         ))
-    ]), $responseFactory),
+    ])), $responseFactory),
 ]);
 
 $app->emit($app->handle((new ServerRequestFactory())->createFromGlobals()));

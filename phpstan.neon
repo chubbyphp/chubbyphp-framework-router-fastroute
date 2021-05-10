@@ -2,4 +2,4 @@ parameters:
     ignoreErrors:
         -
             message: '#Variable \$routeIndex might not be defined.#'
-            path: %currentWorkingDirectory%/src/Router.php
+            path: %currentWorkingDirectory%/src/UrlGenerator.php
