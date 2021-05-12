@@ -26,7 +26,7 @@ Fastroute Router implementation for [chubbyphp-framework][1].
 ## Requirements
 
  * php: ^7.4|^8.0
- * [chubbyphp/chubbyphp-framework][1]: ^3.2
+ * [chubbyphp/chubbyphp-framework][1]: ^3.5
  * [nikic/fast-route][2]: ^1.0|^0.6
 
 ## Installation
@@ -34,7 +34,7 @@ Fastroute Router implementation for [chubbyphp-framework][1].
 Through [Composer](http://getcomposer.org) as [chubbyphp/chubbyphp-framework-router-fastroute][10].
 
 ```bash
-composer require chubbyphp/chubbyphp-framework-router-fastroute "^1.1"
+composer require chubbyphp/chubbyphp-framework-router-fastroute "^1.2"
 ```
 
 ## Usage
@@ -49,10 +49,11 @@ namespace App;
 use Chubbyphp\Framework\Application;
 use Chubbyphp\Framework\ErrorHandler;
 use Chubbyphp\Framework\Middleware\ExceptionMiddleware;
-use Chubbyphp\Framework\Middleware\RouterMiddleware;
+use Chubbyphp\Framework\Middleware\RouteMatcherMiddleware;
 use Chubbyphp\Framework\RequestHandler\CallbackRequestHandler;
-use Chubbyphp\Framework\Router\FastRoute\Router;
+use Chubbyphp\Framework\Router\FastRoute\RouteMatcher;
 use Chubbyphp\Framework\Router\Route;
+use Chubbyphp\Framework\Router\Routes;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\ServerRequestFactory;
@@ -65,7 +66,7 @@ $responseFactory = new ResponseFactory();
 
 $app = new Application([
     new ExceptionMiddleware($responseFactory, true),
-    new RouterMiddleware(new Router([
+    new RouteMatcherMiddleware(new RouteMatcher(new Routes([
         Route::get('/hello/{name:[a-z]+}', 'hello', new CallbackRequestHandler(
             function (ServerRequestInterface $request) use ($responseFactory) {
                 $name = $request->getAttribute('name');
@@ -75,7 +76,7 @@ $app = new Application([
                 return $response;
             }
         ))
-    ]), $responseFactory),
+    ])), $responseFactory),
 ]);
 
 $app->emit($app->handle((new ServerRequestFactory())->createFromGlobals()));
