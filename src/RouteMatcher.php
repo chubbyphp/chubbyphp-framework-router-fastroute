@@ -7,15 +7,15 @@ namespace Chubbyphp\Framework\Router\FastRoute;
 use Chubbyphp\Framework\Router\Exceptions\MethodNotAllowedException;
 use Chubbyphp\Framework\Router\Exceptions\NotFoundException;
 use Chubbyphp\Framework\Router\RouteInterface;
+use Chubbyphp\Framework\Router\RouteMatcherInterface;
 use Chubbyphp\Framework\Router\RoutesInterface;
-use Chubbyphp\Framework\Router\UrlMatcherInterface;
 use FastRoute\DataGenerator\GroupCountBased as DataGenerator;
 use FastRoute\Dispatcher\GroupCountBased as Dispatcher;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std as RouteParser;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UrlMatcher implements UrlMatcherInterface
+final class RouteMatcher implements RouteMatcherInterface
 {
     /**
      * @var array<string, RouteInterface>

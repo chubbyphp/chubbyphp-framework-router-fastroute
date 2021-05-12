@@ -39,7 +39,7 @@ final class RouterTest extends TestCase
 
         self::assertSame(E_USER_DEPRECATED, $error['type']);
         self::assertSame(
-            'Use Chubbyphp\Framework\Router\FastRoute\UrlMatcher|Chubbyphp\Framework\Router\FastRoute\UrlGenerator instead of instead of "Chubbyphp\Framework\Router\FastRoute\Router"',
+            'Use Chubbyphp\Framework\Router\FastRoute\RouteMatcher|Chubbyphp\Framework\Router\FastRoute\UrlGenerator instead of instead of "Chubbyphp\Framework\Router\FastRoute\Router"',
             $error['message']
         );
     }

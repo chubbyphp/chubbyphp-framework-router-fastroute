@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Chubbyphp\Framework\Router\FastRoute;
 
 use Chubbyphp\Framework\Router\RouteInterface;
+use Chubbyphp\Framework\Router\RouteMatcherInterface;
 use Chubbyphp\Framework\Router\RouterInterface;
 use Chubbyphp\Framework\Router\Routes;
 use Chubbyphp\Framework\Router\UrlGeneratorInterface;
-use Chubbyphp\Framework\Router\UrlMatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -16,7 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class Router implements RouterInterface
 {
-    private UrlMatcherInterface $urlMatcher;
+    private RouteMatcherInterface $routeMatcher;
 
     private UrlGeneratorInterface $urlGenerator;
 
@@ -26,18 +26,18 @@ final class Router implements RouterInterface
     public function __construct(array $routes, ?string $cacheFile = null, string $basePath = '')
     {
         @trigger_error(
-            sprintf('Use %s|%s instead of instead of "%s"', UrlMatcher::class, UrlGenerator::class, self::class),
+            sprintf('Use %s|%s instead of instead of "%s"', RouteMatcher::class, UrlGenerator::class, self::class),
             E_USER_DEPRECATED
         );
 
         $routes = new Routes($routes);
-        $this->urlMatcher = new UrlMatcher($routes, $cacheFile);
+        $this->routeMatcher = new RouteMatcher($routes, $cacheFile);
         $this->urlGenerator = new UrlGenerator($routes, $basePath);
     }
 
     public function match(ServerRequestInterface $request): RouteInterface
     {
-        return $this->urlMatcher->match($request);
+        return $this->routeMatcher->match($request);
     }
 
     /**

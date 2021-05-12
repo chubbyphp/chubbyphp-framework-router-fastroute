@@ -8,9 +8,9 @@ use Bitty\Http\ResponseFactory as BittyResponseFactory;
 use Bitty\Http\ServerRequestFactory as BittyServerRequestFactory;
 use Chubbyphp\Framework\Application;
 use Chubbyphp\Framework\Middleware\ExceptionMiddleware;
-use Chubbyphp\Framework\Middleware\UrlMatcherMiddleware;
+use Chubbyphp\Framework\Middleware\RouteMatcherMiddleware;
 use Chubbyphp\Framework\RequestHandler\CallbackRequestHandler;
-use Chubbyphp\Framework\Router\FastRoute\UrlMatcher;
+use Chubbyphp\Framework\Router\FastRoute\RouteMatcher;
 use Chubbyphp\Framework\Router\Route;
 use Chubbyphp\Framework\Router\Routes;
 use Fig\Http\Message\RequestMethodInterface as RequestMethod;
@@ -34,7 +34,7 @@ use Sunrise\Http\ServerRequest\ServerRequestFactory as SunriseServerRequestFacto
  *
  * @internal
  */
-final class UrlMatcherTest extends TestCase
+final class RouteMatcherTest extends TestCase
 {
     public function providePsr7Implementations(): array
     {
@@ -85,7 +85,7 @@ final class UrlMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new UrlMatcherMiddleware(new UrlMatcher(new Routes([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new Routes([$route])), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -118,7 +118,7 @@ final class UrlMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new UrlMatcherMiddleware(new UrlMatcher(new Routes([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new Routes([$route])), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -154,7 +154,7 @@ final class UrlMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new UrlMatcherMiddleware(new UrlMatcher(new Routes([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new Routes([$route])), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -186,7 +186,7 @@ final class UrlMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new UrlMatcherMiddleware(new UrlMatcher(new Routes([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new Routes([$route])), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -221,7 +221,7 @@ final class UrlMatcherTest extends TestCase
         ));
 
         $app = new Application([
-            new UrlMatcherMiddleware(new UrlMatcher(new Routes([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new Routes([$route])), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(

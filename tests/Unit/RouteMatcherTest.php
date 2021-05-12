@@ -16,11 +16,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 
 /**
- * @covers \Chubbyphp\Framework\Router\FastRoute\UrlMatcher
+ * @covers \Chubbyphp\Framework\Router\FastRoute\RouteMatcher
  *
  * @internal
  */
-final class UrlMatcherTest extends TestCase
+final class RouteMatcherTest extends TestCase
 {
     use AssertTrait;
     use MockByCallsTrait;
