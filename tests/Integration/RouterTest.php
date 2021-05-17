@@ -8,7 +8,7 @@ use Bitty\Http\ResponseFactory as BittyResponseFactory;
 use Bitty\Http\ServerRequestFactory as BittyServerRequestFactory;
 use Chubbyphp\Framework\Application;
 use Chubbyphp\Framework\Middleware\ExceptionMiddleware;
-use Chubbyphp\Framework\Middleware\RouterMiddleware;
+use Chubbyphp\Framework\Middleware\RouteMatcherMiddleware;
 use Chubbyphp\Framework\RequestHandler\CallbackRequestHandler;
 use Chubbyphp\Framework\Router\FastRoute\Router;
 use Chubbyphp\Framework\Router\Route;
@@ -84,7 +84,7 @@ final class RouterTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouterMiddleware(new Router([$route]), $responseFactory),
+            new RouteMatcherMiddleware(new Router([$route]), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -117,7 +117,7 @@ final class RouterTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouterMiddleware(new Router([$route]), $responseFactory),
+            new RouteMatcherMiddleware(new Router([$route]), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -153,7 +153,7 @@ final class RouterTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouterMiddleware(new Router([$route]), $responseFactory),
+            new RouteMatcherMiddleware(new Router([$route]), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -185,7 +185,7 @@ final class RouterTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouterMiddleware(new Router([$route]), $responseFactory),
+            new RouteMatcherMiddleware(new Router([$route]), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -220,7 +220,7 @@ final class RouterTest extends TestCase
         ));
 
         $app = new Application([
-            new RouterMiddleware(new Router([$route]), $responseFactory),
+            new RouteMatcherMiddleware(new Router([$route]), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
