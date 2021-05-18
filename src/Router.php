@@ -6,6 +6,7 @@ namespace Chubbyphp\Framework\Router\FastRoute;
 
 use Chubbyphp\Framework\Router\RouteInterface;
 use Chubbyphp\Framework\Router\RouteMatcherInterface;
+use Chubbyphp\Framework\Router\RouterInterface;
 use Chubbyphp\Framework\Router\Routes;
 use Chubbyphp\Framework\Router\UrlGeneratorInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @deprecated
  */
-final class Router implements RouteMatcherInterface, UrlGeneratorInterface
+final class Router implements RouterInterface
 {
     private RouteMatcherInterface $routeMatcher;
 
