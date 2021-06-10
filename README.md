@@ -47,7 +47,6 @@ declare(strict_types=1);
 namespace App;
 
 use Chubbyphp\Framework\Application;
-use Chubbyphp\Framework\ErrorHandler;
 use Chubbyphp\Framework\Middleware\ExceptionMiddleware;
 use Chubbyphp\Framework\Middleware\RouteMatcherMiddleware;
 use Chubbyphp\Framework\RequestHandler\CallbackRequestHandler;
@@ -59,8 +58,6 @@ use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\ServerRequestFactory;
 
 $loader = require __DIR__.'/vendor/autoload.php';
-
-set_error_handler([new ErrorHandler(), 'errorToException']);
 
 $responseFactory = new ResponseFactory();
 
