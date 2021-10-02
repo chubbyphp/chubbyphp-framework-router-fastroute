@@ -77,7 +77,7 @@ final class RouteMatcherTest extends TestCase
             static function (ServerRequestInterface $request) use ($responseFactory) {
                 $name = $request->getAttribute('name');
                 $response = $responseFactory->createResponse();
-                $response->getBody()->write(\sprintf('Hello, %s', $name));
+                $response->getBody()->write(sprintf('Hello, %s', $name));
 
                 return $response;
             }
@@ -110,7 +110,7 @@ final class RouteMatcherTest extends TestCase
             static function (ServerRequestInterface $request) use ($responseFactory) {
                 $name = $request->getAttribute('name');
                 $response = $responseFactory->createResponse();
-                $response->getBody()->write(\sprintf('Hello, %s', $name));
+                $response->getBody()->write(sprintf('Hello, %s', $name));
 
                 return $response;
             }
@@ -146,7 +146,7 @@ final class RouteMatcherTest extends TestCase
             static function (ServerRequestInterface $request) use ($responseFactory) {
                 $name = $request->getAttribute('name');
                 $response = $responseFactory->createResponse();
-                $response->getBody()->write(\sprintf('Hello, %s', $name));
+                $response->getBody()->write(sprintf('Hello, %s', $name));
 
                 return $response;
             }

@@ -9,7 +9,6 @@ use Chubbyphp\Framework\Router\RouteInterface;
 use Chubbyphp\Framework\Router\RouterException;
 use Chubbyphp\Mock\Call;
 use Chubbyphp\Mock\MockByCallsTrait;
-use Chubbyphp\Tests\Framework\Router\FastRoute\Helper\AssertTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,10 +21,9 @@ use Psr\Http\Message\UriInterface;
  */
 final class RouterTest extends TestCase
 {
-    use AssertTrait;
     use MockByCallsTrait;
 
-    const UUID_PATTERN = '[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}';
+    public const UUID_PATTERN = '[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}';
 
     public function testDeprecationWithinConstruct(): void
     {
@@ -74,7 +72,7 @@ final class RouterTest extends TestCase
             Call::create('withAttributes')->with([])->willReturnSelf(),
         ]);
 
-        $cacheFile = \sys_get_temp_dir().'/fast-route-'.\uniqid().\uniqid().'.php';
+        $cacheFile = sys_get_temp_dir().'/fast-route-'.uniqid().uniqid().'.php';
 
         self::assertFileDoesNotExist($cacheFile);
 
@@ -84,7 +82,7 @@ final class RouterTest extends TestCase
 
         self::assertSame($route2, $router->match($request));
 
-        \unlink($cacheFile);
+        unlink($cacheFile);
     }
 
     public function testMatchNotFound(): void

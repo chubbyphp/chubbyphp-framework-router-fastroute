@@ -33,7 +33,7 @@ final class RouteMatcher implements RouteMatcherInterface
     public function match(ServerRequestInterface $request): RouteInterface
     {
         $method = $request->getMethod();
-        $path = \rawurldecode($request->getUri()->getPath());
+        $path = rawurldecode($request->getUri()->getPath());
 
         $routeInfo = $this->dispatcher->dispatch($method, $path);
 
@@ -61,10 +61,10 @@ final class RouteMatcher implements RouteMatcherInterface
             return new Dispatcher($this->getRouteCollector()->getData());
         }
 
-        if (!\file_exists($cacheFile)) {
-            \file_put_contents(
+        if (!file_exists($cacheFile)) {
+            file_put_contents(
                 $cacheFile,
-                '<?php return '.\var_export($this->getRouteCollector()->getData(), true).';'
+                '<?php return '.var_export($this->getRouteCollector()->getData(), true).';'
             );
         }
 

@@ -55,7 +55,7 @@ final class UrlGenerator implements UrlGeneratorInterface
     {
         $route = $this->getRoute($name);
 
-        $routePartSets = \array_reverse($this->routeParser->parse($route->getPath()));
+        $routePartSets = array_reverse($this->routeParser->parse($route->getPath()));
 
         $routeIndex = $this->getRouteIndex($routePartSets, $attributes);
 
@@ -65,7 +65,7 @@ final class UrlGenerator implements UrlGeneratorInterface
             return $this->basePath.$path;
         }
 
-        return $this->basePath.$path.'?'.\http_build_query($queryParams);
+        return $this->basePath.$path.'?'.http_build_query($queryParams);
     }
 
     private function getRoute(string $name): RouteInterface
@@ -103,10 +103,8 @@ final class UrlGenerator implements UrlGeneratorInterface
     /**
      * @param array<int, array<int, array|string>> $routePartSets
      * @param array<string>                        $attributes
-     *
-     * @return string
      */
-    private function generatePathFromAttributes(string $name, array $routePartSets, array $attributes, int $routeIndex)
+    private function generatePathFromAttributes(string $name, array $routePartSets, array $attributes, int $routeIndex): string
     {
         $pathParts = [];
 
@@ -118,7 +116,7 @@ final class UrlGenerator implements UrlGeneratorInterface
             }
         }
 
-        return \implode('', $pathParts);
+        return implode('', $pathParts);
     }
 
     /**
@@ -136,7 +134,7 @@ final class UrlGenerator implements UrlGeneratorInterface
         $value = (string) $attributes[$attribute];
         $pattern = '!^'.$routePart[1].'$!';
 
-        if (1 !== \preg_match($pattern, $value)) {
+        if (1 !== preg_match($pattern, $value)) {
             throw NotMatchingValueForPathGenerationException::create(
                 $name,
                 $attribute,
