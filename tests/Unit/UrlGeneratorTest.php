@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Chubbyphp\Tests\Framework\Router\FastRoute\Unit;
 
+use Chubbyphp\Framework\Router\Exceptions\MissingRouteByNameException;
+use Chubbyphp\Framework\Router\Exceptions\RouteGenerationException;
 use Chubbyphp\Framework\Router\FastRoute\Router;
 use Chubbyphp\Framework\Router\RouteInterface;
-use Chubbyphp\Framework\Router\RouterException;
 use Chubbyphp\Mock\Call;
 use Chubbyphp\Mock\MockByCallsTrait;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -84,7 +85,7 @@ final class UrlGeneratorTest extends TestCase
 
     public function testGenerateUriWithMissingAttribute(): void
     {
-        $this->expectException(RouterException::class);
+        $this->expectException(RouteGenerationException::class);
         $this->expectExceptionMessage('Route generation for route "user" with path "/user/{id:\d+}[/{name}]" with attributes "{}" failed. Missing attribute "id"');
         $this->expectExceptionCode(3);
 
@@ -111,7 +112,7 @@ final class UrlGeneratorTest extends TestCase
 
     public function testGenerateUriWithNotMatchingAttribute(): void
     {
-        $this->expectException(RouterException::class);
+        $this->expectException(RouteGenerationException::class);
         $this->expectExceptionMessage(
             'Route generation for route "user" with path "/user/{id:\d+}[/{name}]" with attributes "{"id":"a3bce0ca-2b7c-4fc6-8dad-ecdcc6907791"}" failed. Not matching value "a3bce0ca-2b7c-4fc6-8dad-ecdcc6907791" with pattern "\d+" on attribute "id"'
         );
@@ -199,9 +200,8 @@ final class UrlGeneratorTest extends TestCase
 
     public function testGeneratePathWithMissingRoute(): void
     {
-        $this->expectException(RouterException::class);
+        $this->expectException(MissingRouteByNameException::class);
         $this->expectExceptionMessage('Missing route: "user"');
-        $this->expectExceptionCode(1);
 
         $router = new Router([]);
         $router->generatePath('user', ['id' => 1]);
@@ -238,7 +238,7 @@ final class UrlGeneratorTest extends TestCase
 
     public function testGeneratePathWithMissingAttribute(): void
     {
-        $this->expectException(RouterException::class);
+        $this->expectException(RouteGenerationException::class);
         $this->expectExceptionMessage('Route generation for route "user" with path "/user/{id:\d+}[/{name}]" with attributes "{}" failed. Missing attribute "id"');
 
         /** @var MockObject|RouteInterface $route */
