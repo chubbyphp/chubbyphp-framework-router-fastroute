@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Chubbyphp\Framework\Router\FastRoute;
 
-use Chubbyphp\Framework\Router\Exceptions\MissingAttributeForPathGenerationException;
 use Chubbyphp\Framework\Router\Exceptions\MissingRouteByNameException;
-use Chubbyphp\Framework\Router\Exceptions\NotMatchingValueForPathGenerationException;
+use Chubbyphp\Framework\Router\Exceptions\RouteGenerationException;
 use Chubbyphp\Framework\Router\RouteInterface;
 use Chubbyphp\Framework\Router\RoutesInterface;
 use Chubbyphp\Framework\Router\UrlGeneratorInterface;
@@ -54,12 +53,13 @@ final class UrlGenerator implements UrlGeneratorInterface
     public function generatePath(string $name, array $attributes = [], array $queryParams = []): string
     {
         $route = $this->getRoute($name);
+        $path = $route->getPath();
 
-        $routePartSets = array_reverse($this->routeParser->parse($route->getPath()));
+        $routePartSets = array_reverse($this->routeParser->parse($path));
 
         $routeIndex = $this->getRouteIndex($routePartSets, $attributes);
 
-        $path = $this->generatePathFromAttributes($name, $routePartSets, $attributes, $routeIndex);
+        $path = $this->generatePathFromAttributes($name, $path, $routePartSets, $attributes, $routeIndex);
 
         if ([] === $queryParams) {
             return $this->basePath.$path;
@@ -104,13 +104,18 @@ final class UrlGenerator implements UrlGeneratorInterface
      * @param array<int, array<int, array|string>> $routePartSets
      * @param array<string>                        $attributes
      */
-    private function generatePathFromAttributes(string $name, array $routePartSets, array $attributes, int $routeIndex): string
-    {
+    private function generatePathFromAttributes(
+        string $name,
+        string $path,
+        array $routePartSets,
+        array $attributes,
+        int $routeIndex
+    ): string {
         $pathParts = [];
 
         foreach ($routePartSets[$routeIndex] as $routePart) {
             if (\is_array($routePart)) {
-                $pathParts[] = $this->getAttributeValue($name, $routePart, $attributes);
+                $pathParts[] = $this->getAttributeValue($name, $path, $routePart, $attributes);
             } else {
                 $pathParts[] = $routePart;
             }
@@ -123,23 +128,33 @@ final class UrlGenerator implements UrlGeneratorInterface
      * @param array<int, string> $routePart
      * @param array<string>      $attributes
      */
-    private function getAttributeValue(string $name, array $routePart, array $attributes): string
+    private function getAttributeValue(string $name, string $path, array $routePart, array $attributes): string
     {
         $attribute = $routePart[0];
 
         if (!isset($attributes[$attribute])) {
-            throw MissingAttributeForPathGenerationException::create($name, $attribute);
+            throw RouteGenerationException::create(
+                $name,
+                $path,
+                $attributes,
+                new \RuntimeException(sprintf('Missing attribute "%s"', $attribute))
+            );
         }
 
         $value = (string) $attributes[$attribute];
         $pattern = '!^'.$routePart[1].'$!';
 
         if (1 !== preg_match($pattern, $value)) {
-            throw NotMatchingValueForPathGenerationException::create(
+            throw RouteGenerationException::create(
                 $name,
-                $attribute,
-                $value,
-                $routePart[1]
+                $path,
+                $attributes,
+                new \RuntimeException(sprintf(
+                    'Not matching value "%s" with pattern "%s" on attribute "%s"',
+                    $value,
+                    $routePart[1],
+                    $attribute
+                ))
             );
         }
 

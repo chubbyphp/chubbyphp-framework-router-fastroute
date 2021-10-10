@@ -85,7 +85,7 @@ final class UrlGeneratorTest extends TestCase
     public function testGenerateUriWithMissingAttribute(): void
     {
         $this->expectException(RouterException::class);
-        $this->expectExceptionMessage('Missing attribute "id" while path generation for route: "user"');
+        $this->expectExceptionMessage('Route generation for route "user" with path "/user/{id:\d+}[/{name}]" with attributes "{}" failed. Missing attribute "id"');
         $this->expectExceptionCode(3);
 
         /** @var MockObject|UriInterface $uri */
@@ -113,10 +113,9 @@ final class UrlGeneratorTest extends TestCase
     {
         $this->expectException(RouterException::class);
         $this->expectExceptionMessage(
-            'Not matching value "a3bce0ca-2b7c-4fc6-8dad-ecdcc6907791" with pattern "\d+" on attribute "id" while'
-            .' path generation for route: "user"'
+            'Route generation for route "user" with path "/user/{id:\d+}[/{name}]" with attributes "{"id":"a3bce0ca-2b7c-4fc6-8dad-ecdcc6907791"}" failed. Not matching value "a3bce0ca-2b7c-4fc6-8dad-ecdcc6907791" with pattern "\d+" on attribute "id"'
         );
-        $this->expectExceptionCode(4);
+        $this->expectExceptionCode(3);
 
         /** @var MockObject|UriInterface $uri */
         $uri = $this->getMockByCalls(UriInterface::class);
@@ -240,7 +239,7 @@ final class UrlGeneratorTest extends TestCase
     public function testGeneratePathWithMissingAttribute(): void
     {
         $this->expectException(RouterException::class);
-        $this->expectExceptionMessage('Missing attribute "id" while path generation for route: "user"');
+        $this->expectExceptionMessage('Route generation for route "user" with path "/user/{id:\d+}[/{name}]" with attributes "{}" failed. Missing attribute "id"');
 
         /** @var MockObject|RouteInterface $route */
         $route = $this->getMockByCalls(RouteInterface::class, [
