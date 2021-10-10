@@ -53,13 +53,13 @@ final class UrlGenerator implements UrlGeneratorInterface
     public function generatePath(string $name, array $attributes = [], array $queryParams = []): string
     {
         $route = $this->getRoute($name);
-        $path = $route->getPath();
+        $routePath = $route->getPath();
 
-        $routePartSets = array_reverse($this->routeParser->parse($path));
+        $routePartSets = array_reverse($this->routeParser->parse($routePath));
 
         $routeIndex = $this->getRouteIndex($routePartSets, $attributes);
 
-        $path = $this->generatePathFromAttributes($name, $path, $routePartSets, $attributes, $routeIndex);
+        $path = $this->generatePathFromAttributes($name, $routePath, $routePartSets, $attributes, $routeIndex);
 
         if ([] === $queryParams) {
             return $this->basePath.$path;
