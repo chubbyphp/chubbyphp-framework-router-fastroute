@@ -1,5 +1,8 @@
 parameters:
     ignoreErrors:
         -
+            message: '/no value type specified in iterable type array/'
+            path: %currentWorkingDirectory%/src/*.php
+        -
             message: '#Variable \$routeIndex might not be defined.#'
             path: %currentWorkingDirectory%/src/UrlGenerator.php
