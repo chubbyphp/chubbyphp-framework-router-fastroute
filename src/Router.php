@@ -3,10 +3,8 @@
 declare(strict_types=1);
 
 namespace Chubbyphp\Framework\Router {
-    if (!interface_exists('RouteInterface')) {
-        interface RouterInterface extends RouteMatcherInterface, UrlGeneratorInterface
-        {
-        }
+    interface RouterInterface extends RouteMatcherInterface, UrlGeneratorInterface
+    {
     }
 }
 
