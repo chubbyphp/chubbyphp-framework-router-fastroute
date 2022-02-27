@@ -14,8 +14,8 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
-        "chubbyphp/chubbyphp-framework": "^3.6.2|^4.0@dev",
+        "php": "^8.0",
+        "chubbyphp/chubbyphp-framework": "^4.0",
         "nikic/fast-route": "^1.0|^0.6",
         "psr/http-message": "^1.0.1"
     },
@@ -25,14 +25,14 @@
         "chubbyphp/chubbyphp-mock": "^1.6.1",
         "guzzlehttp/psr7": "^1.4.2",
         "http-interop/http-factory-guzzle": "^1.0",
-        "infection/infection": "^0.25.3",
+        "infection/infection": "^0.26.5",
         "laminas/laminas-diactoros": "^2.0",
         "nyholm/psr7": "^1.0",
-        "php-coveralls/php-coveralls": "^2.5.1",
+        "php-coveralls/php-coveralls": "^2.5.2",
         "phploc/phploc": "^7.0.2",
         "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "^1.1.2",
-        "phpunit/phpunit": "^9.5.10",
+        "phpstan/phpstan": "^1.4.6",
+        "phpunit/phpunit": "^9.5.16",
         "slim/psr7": "^0.5|^1.0",
         "sunrise/http-factory": "^1.0.4"
     },
@@ -47,7 +47,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.2-dev"
+            "dev-master": "1.3-dev"
         }
     },
     "scripts": {

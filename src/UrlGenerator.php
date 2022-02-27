@@ -21,13 +21,10 @@ final class UrlGenerator implements UrlGeneratorInterface
 
     private RouteParser $routeParser;
 
-    private string $basePath;
-
-    public function __construct(RoutesInterface $routes, string $basePath = '')
+    public function __construct(RoutesInterface $routes, private string $basePath = '')
     {
         $this->routesByName = $routes->getRoutesByName();
         $this->routeParser = new RouteParser();
-        $this->basePath = $basePath;
     }
 
     /**
@@ -114,11 +111,7 @@ final class UrlGenerator implements UrlGeneratorInterface
         $pathParts = [];
 
         foreach ($routePartSets[$routeIndex] as $routePart) {
-            if (\is_array($routePart)) {
-                $pathParts[] = $this->getAttributeValue($name, $path, $routePart, $attributes);
-            } else {
-                $pathParts[] = $routePart;
-            }
+            $pathParts[] = \is_array($routePart) ? $this->getAttributeValue($name, $path, $routePart, $attributes) : $routePart;
         }
 
         return implode('', $pathParts);
