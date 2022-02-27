@@ -43,7 +43,11 @@
         "psr-4": { "Chubbyphp\\Tests\\Framework\\Router\\FastRoute\\": "tests/" }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "infection/extension-installer": true
+        }
     },
     "extra": {
         "branch-alias": {
