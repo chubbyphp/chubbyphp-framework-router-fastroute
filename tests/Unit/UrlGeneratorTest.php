@@ -6,8 +6,9 @@ namespace Chubbyphp\Tests\Framework\Router\FastRoute\Unit;
 
 use Chubbyphp\Framework\Router\Exceptions\MissingRouteByNameException;
 use Chubbyphp\Framework\Router\Exceptions\RouteGenerationException;
-use Chubbyphp\Framework\Router\FastRoute\Router;
+use Chubbyphp\Framework\Router\FastRoute\UrlGenerator;
 use Chubbyphp\Framework\Router\RouteInterface;
+use Chubbyphp\Framework\Router\RoutesByNameInterface;
 use Chubbyphp\Mock\Call;
 use Chubbyphp\Mock\MockByCallsTrait;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -48,33 +49,34 @@ final class UrlGeneratorTest extends TestCase
 
         /** @var MockObject|RouteInterface $route */
         $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getName')->with()->willReturn('user'),
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getName')->with()->willReturn('user'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
         ]);
 
-        $router = new Router([$route]);
+        /** @var MockObject|RoutesByNameInterface $routesByName */
+        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
+            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        ]);
+
+        $urlGenerator = new UrlGenerator($routesByName);
 
         self::assertSame(
             'https://user:password@localhost/user/1',
-            $router->generateUrl($request, 'user', ['id' => 1])
+            $urlGenerator->generateUrl($request, 'user', ['id' => 1])
         );
         self::assertSame(
             'https://user:password@localhost/user/1?key=value',
-            $router->generateUrl($request, 'user', ['id' => 1], ['key' => 'value'])
+            $urlGenerator->generateUrl($request, 'user', ['id' => 1], ['key' => 'value'])
         );
         self::assertSame(
             'https://user:password@localhost/user/1/sample',
-            $router->generateUrl($request, 'user', ['id' => 1, 'name' => 'sample'])
+            $urlGenerator->generateUrl($request, 'user', ['id' => 1, 'name' => 'sample'])
         );
         self::assertSame(
             'https://user:password@localhost/user/1/sample?key1=value1&key2=value2',
-            $router->generateUrl(
+            $urlGenerator->generateUrl(
                 $request,
                 'user',
                 ['id' => 1, 'name' => 'sample'],
@@ -99,15 +101,16 @@ final class UrlGeneratorTest extends TestCase
 
         /** @var MockObject|RouteInterface $route */
         $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getName')->with()->willReturn('user'),
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getName')->with()->willReturn('user'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
         ]);
 
-        $router = new Router([$route]);
-        $router->generateUrl($request, 'user');
+        /** @var MockObject|RoutesByNameInterface $routesByName */
+        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
+            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        ]);
+
+        $urlGenerator = new UrlGenerator($routesByName);
+        $urlGenerator->generateUrl($request, 'user');
     }
 
     public function testGenerateUriWithNotMatchingAttribute(): void
@@ -128,15 +131,16 @@ final class UrlGeneratorTest extends TestCase
 
         /** @var MockObject|RouteInterface $route */
         $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getName')->with()->willReturn('user'),
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getName')->with()->willReturn('user'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
         ]);
 
-        $router = new Router([$route]);
-        $router->generateUrl($request, 'user', ['id' => 'a3bce0ca-2b7c-4fc6-8dad-ecdcc6907791']);
+        /** @var MockObject|RoutesByNameInterface $routesByName */
+        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
+            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        ]);
+
+        $urlGenerator = new UrlGenerator($routesByName);
+        $urlGenerator->generateUrl($request, 'user', ['id' => 'a3bce0ca-2b7c-4fc6-8dad-ecdcc6907791']);
     }
 
     public function testGenerateUriWithBasePath(): void
@@ -163,33 +167,34 @@ final class UrlGeneratorTest extends TestCase
 
         /** @var MockObject|RouteInterface $route */
         $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getName')->with()->willReturn('user'),
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getName')->with()->willReturn('user'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
         ]);
 
-        $router = new Router([$route], null, '/path/to/directory');
+        /** @var MockObject|RoutesByNameInterface $routesByName */
+        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
+            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        ]);
+
+        $urlGenerator = new UrlGenerator($routesByName, '/path/to/directory');
 
         self::assertSame(
             'https://user:password@localhost/path/to/directory/user/1',
-            $router->generateUrl($request, 'user', ['id' => 1])
+            $urlGenerator->generateUrl($request, 'user', ['id' => 1])
         );
         self::assertSame(
             'https://user:password@localhost/path/to/directory/user/1?key=value',
-            $router->generateUrl($request, 'user', ['id' => 1], ['key' => 'value'])
+            $urlGenerator->generateUrl($request, 'user', ['id' => 1], ['key' => 'value'])
         );
         self::assertSame(
             'https://user:password@localhost/path/to/directory/user/1/sample',
-            $router->generateUrl($request, 'user', ['id' => 1, 'name' => 'sample'])
+            $urlGenerator->generateUrl($request, 'user', ['id' => 1, 'name' => 'sample'])
         );
         self::assertSame(
             'https://user:password@localhost/path/to/directory/user/1/sample?key1=value1&key2=value2',
-            $router->generateUrl(
+            $urlGenerator->generateUrl(
                 $request,
                 'user',
                 ['id' => 1, 'name' => 'sample'],
@@ -203,32 +208,38 @@ final class UrlGeneratorTest extends TestCase
         $this->expectException(MissingRouteByNameException::class);
         $this->expectExceptionMessage('Missing route: "user"');
 
-        $router = new Router([]);
-        $router->generatePath('user', ['id' => 1]);
+        /** @var MockObject|RoutesByNameInterface $routesByName */
+        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
+            Call::create('getRoutesByName')->with()->willReturn([]),
+        ]);
+
+        $urlGenerator = new UrlGenerator($routesByName);
+        $urlGenerator->generatePath('user', ['id' => 1]);
     }
 
     public function testGeneratePath(): void
     {
         /** @var MockObject|RouteInterface $route */
         $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getName')->with()->willReturn('user'),
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getName')->with()->willReturn('user'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
         ]);
 
-        $router = new Router([$route]);
+        /** @var MockObject|RoutesByNameInterface $routesByName */
+        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
+            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        ]);
 
-        self::assertSame('/user/1', $router->generatePath('user', ['id' => 1]));
-        self::assertSame('/user/1?key=value', $router->generatePath('user', ['id' => 1], ['key' => 'value']));
-        self::assertSame('/user/1/sample', $router->generatePath('user', ['id' => 1, 'name' => 'sample']));
+        $urlGenerator = new UrlGenerator($routesByName);
+
+        self::assertSame('/user/1', $urlGenerator->generatePath('user', ['id' => 1]));
+        self::assertSame('/user/1?key=value', $urlGenerator->generatePath('user', ['id' => 1], ['key' => 'value']));
+        self::assertSame('/user/1/sample', $urlGenerator->generatePath('user', ['id' => 1, 'name' => 'sample']));
         self::assertSame(
             '/user/1/sample?key1=value1&key2=value2',
-            $router->generatePath(
+            $urlGenerator->generatePath(
                 'user',
                 ['id' => 1, 'name' => 'sample'],
                 ['key1' => 'value1', 'key2' => 'value2']
@@ -243,45 +254,47 @@ final class UrlGeneratorTest extends TestCase
 
         /** @var MockObject|RouteInterface $route */
         $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getName')->with()->willReturn('user'),
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getName')->with()->willReturn('user'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
         ]);
 
-        $router = new Router([$route]);
-        $router->generatePath('user');
+        /** @var MockObject|RoutesByNameInterface $routesByName */
+        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
+            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        ]);
+
+        $urlGenerator = new UrlGenerator($routesByName);
+        $urlGenerator->generatePath('user');
     }
 
     public function testGeneratePathWithBasePath(): void
     {
         /** @var MockObject|RouteInterface $route */
         $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getName')->with()->willReturn('user'),
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getName')->with()->willReturn('user'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
             Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
         ]);
 
-        $router = new Router([$route], null, '/path/to/directory');
+        /** @var MockObject|RoutesByNameInterface $routesByName */
+        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
+            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        ]);
 
-        self::assertSame('/path/to/directory/user/1', $router->generatePath('user', ['id' => 1]));
+        $urlGenerator = new UrlGenerator($routesByName, '/path/to/directory');
+
+        self::assertSame('/path/to/directory/user/1', $urlGenerator->generatePath('user', ['id' => 1]));
         self::assertSame(
             '/path/to/directory/user/1?key=value',
-            $router->generatePath('user', ['id' => 1], ['key' => 'value'])
+            $urlGenerator->generatePath('user', ['id' => 1], ['key' => 'value'])
         );
         self::assertSame(
             '/path/to/directory/user/1/sample',
-            $router->generatePath('user', ['id' => 1, 'name' => 'sample'])
+            $urlGenerator->generatePath('user', ['id' => 1, 'name' => 'sample'])
         );
         self::assertSame(
             '/path/to/directory/user/1/sample?key1=value1&key2=value2',
-            $router->generatePath(
+            $urlGenerator->generatePath(
                 'user',
                 ['id' => 1, 'name' => 'sample'],
                 ['key1' => 'value1', 'key2' => 'value2']

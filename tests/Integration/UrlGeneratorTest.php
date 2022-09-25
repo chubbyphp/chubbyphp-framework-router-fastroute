@@ -7,7 +7,7 @@ namespace Chubbyphp\Tests\Framework\Router\FastRoute\Integration;
 use Chubbyphp\Framework\RequestHandler\CallbackRequestHandler;
 use Chubbyphp\Framework\Router\FastRoute\UrlGenerator;
 use Chubbyphp\Framework\Router\Route;
-use Chubbyphp\Framework\Router\Routes;
+use Chubbyphp\Framework\Router\RoutesByName;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,7 +24,7 @@ final class UrlGeneratorTest extends TestCase
             }
         ));
 
-        $router = new UrlGenerator(new Routes([$route]));
+        $router = new UrlGenerator(new RoutesByName([$route]));
 
         self::assertSame(
             '/hello/world?key=value',
