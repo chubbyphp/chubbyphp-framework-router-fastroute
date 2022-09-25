@@ -12,7 +12,7 @@ use Chubbyphp\Framework\Middleware\RouteMatcherMiddleware;
 use Chubbyphp\Framework\RequestHandler\CallbackRequestHandler;
 use Chubbyphp\Framework\Router\FastRoute\RouteMatcher;
 use Chubbyphp\Framework\Router\Route;
-use Chubbyphp\Framework\Router\Routes;
+use Chubbyphp\Framework\Router\RoutesByName;
 use Fig\Http\Message\RequestMethodInterface as RequestMethod;
 use Http\Factory\Guzzle\ResponseFactory as GuzzleResponseFactory;
 use Http\Factory\Guzzle\ServerRequestFactory as GuzzleServerRequestFactory;
@@ -85,7 +85,7 @@ final class RouteMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouteMatcherMiddleware(new RouteMatcher(new Routes([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route])), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -118,7 +118,7 @@ final class RouteMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouteMatcherMiddleware(new RouteMatcher(new Routes([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route])), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -154,7 +154,7 @@ final class RouteMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouteMatcherMiddleware(new RouteMatcher(new Routes([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route])), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -186,7 +186,7 @@ final class RouteMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouteMatcherMiddleware(new RouteMatcher(new Routes([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route])), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -220,8 +220,7 @@ final class RouteMatcherTest extends TestCase
             }
         ));
 
-        $app = new Application([
-            new RouteMatcherMiddleware(new RouteMatcher(new Routes([$route])), $responseFactory),
+        $app = new Application([new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route])), $responseFactory),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(

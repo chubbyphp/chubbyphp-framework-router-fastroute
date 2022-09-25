@@ -7,7 +7,7 @@ namespace Chubbyphp\Framework\Router\FastRoute;
 use Chubbyphp\Framework\Router\Exceptions\MissingRouteByNameException;
 use Chubbyphp\Framework\Router\Exceptions\RouteGenerationException;
 use Chubbyphp\Framework\Router\RouteInterface;
-use Chubbyphp\Framework\Router\RoutesInterface;
+use Chubbyphp\Framework\Router\RoutesByNameInterface;
 use Chubbyphp\Framework\Router\UrlGeneratorInterface;
 use FastRoute\RouteParser\Std as RouteParser;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,7 +21,7 @@ final class UrlGenerator implements UrlGeneratorInterface
 
     private RouteParser $routeParser;
 
-    public function __construct(RoutesInterface $routes, private string $basePath = '')
+    public function __construct(RoutesByNameInterface $routes, private string $basePath = '')
     {
         $this->routesByName = $routes->getRoutesByName();
         $this->routeParser = new RouteParser();

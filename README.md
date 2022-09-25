@@ -26,16 +26,17 @@ Fastroute Router implementation for [chubbyphp-framework][1].
 ## Requirements
 
  * php: ^8.0
- * [chubbyphp/chubbyphp-framework][1]: ^4.0
- * [nikic/fast-route][2]: ^1.0|^0.6
- * [psr/http-message][3]: ^1.0.1
+ * [chubbyphp/chubbyphp-framework][1]: ^5.0
+ * [chubbyphp/chubbyphp-http-exception][2]: ^1.0
+ * [nikic/fast-route][3]: ^1.0|^0.6
+ * [psr/http-message][4]: ^1.0.1
 
 ## Installation
 
 Through [Composer](http://getcomposer.org) as [chubbyphp/chubbyphp-framework-router-fastroute][10].
 
 ```bash
-composer require chubbyphp/chubbyphp-framework-router-fastroute "^1.3"
+composer require chubbyphp/chubbyphp-framework-router-fastroute "^2.0"
 ```
 
 ## Usage
@@ -53,7 +54,7 @@ use Chubbyphp\Framework\Middleware\RouteMatcherMiddleware;
 use Chubbyphp\Framework\RequestHandler\CallbackRequestHandler;
 use Chubbyphp\Framework\Router\FastRoute\RouteMatcher;
 use Chubbyphp\Framework\Router\Route;
-use Chubbyphp\Framework\Router\Routes;
+use Chubbyphp\Framework\Router\RoutesByName;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\ServerRequestFactory;
@@ -64,7 +65,7 @@ $responseFactory = new ResponseFactory();
 
 $app = new Application([
     new ExceptionMiddleware($responseFactory, true),
-    new RouteMatcherMiddleware(new RouteMatcher(new Routes([
+    new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([
         Route::get('/hello/{name:[a-z]+}', 'hello', new CallbackRequestHandler(
             function (ServerRequestInterface $request) use ($responseFactory) {
                 $name = $request->getAttribute('name');
@@ -85,6 +86,7 @@ $app->emit($app->handle((new ServerRequestFactory())->createFromGlobals()));
 Dominik Zogg 2022
 
 [1]: https://packagist.org/packages/chubbyphp/chubbyphp-framework
-[2]: https://packagist.org/packages/nikic/fast-route
-[3]: https://packagist.org/packages/psr/http-message
+[2]: https://packagist.org/packages/chubbyphp/chubbyphp-http-exception
+[3]: https://packagist.org/packages/nikic/fast-route
+[4]: https://packagist.org/packages/psr/http-message
 [10]: https://packagist.org/packages/chubbyphp/chubbyphp-framework-router-fastroute
