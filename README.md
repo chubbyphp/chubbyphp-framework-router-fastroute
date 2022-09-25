@@ -59,7 +59,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\ServerRequestFactory;
 
-$loader = require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 $responseFactory = new ResponseFactory();
 
@@ -67,15 +67,14 @@ $app = new Application([
     new ExceptionMiddleware($responseFactory, true),
     new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([
         Route::get('/hello/{name:[a-z]+}', 'hello', new CallbackRequestHandler(
-            function (ServerRequestInterface $request) use ($responseFactory) {
-                $name = $request->getAttribute('name');
+            static function (ServerRequestInterface $request) use ($responseFactory) {
                 $response = $responseFactory->createResponse();
-                $response->getBody()->write(sprintf('Hello, %s', $name));
+                $response->getBody()->write(sprintf('Hello, %s', $request->getAttribute('name')));
 
                 return $response;
             }
         ))
-    ])), $responseFactory),
+    ]))),
 ]);
 
 $app->emit($app->handle((new ServerRequestFactory())->createFromGlobals()));
