@@ -27,7 +27,7 @@ Fastroute Router implementation for [chubbyphp-framework][1].
 
  * php: ^8.0
  * [chubbyphp/chubbyphp-framework][1]: ^5.0
- * [chubbyphp/chubbyphp-http-exception][2]: ^1.0
+ * [chubbyphp/chubbyphp-http-exception][2]: ^1.0.1
  * [nikic/fast-route][3]: ^1.0|^0.6
  * [psr/http-message][4]: ^1.0.1
 

@@ -111,6 +111,7 @@ final class RouteMatcherTest extends TestCase
                 'status' => 404,
                 'title' => 'Not Found',
                 'detail' => 'The page "/" you are looking for could not be found. Check the address bar to ensure your URL is spelled correctly.',
+                'instance' => null,
             ], $e->jsonSerialize());
         }
     }
@@ -154,6 +155,7 @@ final class RouteMatcherTest extends TestCase
                 'status' => 405,
                 'title' => 'Method Not Allowed',
                 'detail' => 'Method "POST" at path "/api/pets?offset=1&limit=20" is not allowed. Must be one of: "GET"',
+                'instance' => null,
             ], $e->jsonSerialize());
         }
     }
@@ -197,6 +199,7 @@ final class RouteMatcherTest extends TestCase
                 'status' => 404,
                 'title' => 'Not Found',
                 'detail' => 'The page "/api/pets/1" you are looking for could not be found. Check the address bar to ensure your URL is spelled correctly.',
+                'instance' => null,
             ], $e->jsonSerialize());
         }
     }
