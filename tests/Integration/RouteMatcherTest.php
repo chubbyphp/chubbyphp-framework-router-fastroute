@@ -85,7 +85,7 @@ final class RouteMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route]))),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -118,7 +118,7 @@ final class RouteMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route]))),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -154,7 +154,7 @@ final class RouteMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route]))),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -186,7 +186,7 @@ final class RouteMatcherTest extends TestCase
 
         $app = new Application([
             new ExceptionMiddleware($responseFactory, true),
-            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route])), $responseFactory),
+            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route]))),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
@@ -220,7 +220,8 @@ final class RouteMatcherTest extends TestCase
             }
         ));
 
-        $app = new Application([new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route])), $responseFactory),
+        $app = new Application([
+            new RouteMatcherMiddleware(new RouteMatcher(new RoutesByName([$route]))),
         ]);
 
         $request = $serverRequestFactory->createServerRequest(
