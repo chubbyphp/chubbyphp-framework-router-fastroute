@@ -20,8 +20,7 @@ final class UrlGeneratorTest extends TestCase
     public function testGeneratePath(): void
     {
         $route = Route::get('/hello/{name:[a-z]+}', 'hello', new CallbackRequestHandler(
-            static function (): void {
-            }
+            static function (): void {}
         ));
 
         $router = new UrlGenerator(new RoutesByName([$route]));

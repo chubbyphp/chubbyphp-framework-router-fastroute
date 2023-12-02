@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/chubbyphp/chubbyphp-framework-router-fastroute/workflows/CI/badge.svg?branch=master)](https://github.com/chubbyphp/chubbyphp-framework-router-fastroute/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/github/chubbyphp/chubbyphp-framework-router-fastroute/badge.svg?branch=master)](https://coveralls.io/github/chubbyphp/chubbyphp-framework-router-fastroute?branch=master)
-[![Infection MSI](https://badge.stryker-mutator.io/github.com/chubbyphp/chubbyphp-framework-router-fastroute/master)](https://dashboard.stryker-mutator.io/reports/github.com/chubbyphp/chubbyphp-framework-router-fastroute/master)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fchubbyphp%2Fchubbyphp-framework-router-fastroute%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/chubbyphp/chubbyphp-framework-router-fastroute/master)[![Latest Stable Version](https://poser.pugx.org/chubbyphp/chubbyphp-framework-router-fastroute/v/stable.png)](https://packagist.org/packages/chubbyphp/chubbyphp-framework-router-fastroute)
 [![Latest Stable Version](https://poser.pugx.org/chubbyphp/chubbyphp-framework-router-fastroute/v/stable.png)](https://packagist.org/packages/chubbyphp/chubbyphp-framework-router-fastroute)
 [![Total Downloads](https://poser.pugx.org/chubbyphp/chubbyphp-framework-router-fastroute/downloads.png)](https://packagist.org/packages/chubbyphp/chubbyphp-framework-router-fastroute)
 [![Monthly Downloads](https://poser.pugx.org/chubbyphp/chubbyphp-framework-router-fastroute/d/monthly)](https://packagist.org/packages/chubbyphp/chubbyphp-framework-router-fastroute)
@@ -25,18 +25,18 @@ Fastroute Router implementation for [chubbyphp-framework][1].
 
 ## Requirements
 
- * php: ^8.0
- * [chubbyphp/chubbyphp-framework][1]: ^5.0
- * [chubbyphp/chubbyphp-http-exception][2]: ^1.0.1
- * [nikic/fast-route][3]: ^1.0|^0.6
- * [psr/http-message][4]: ^1.0.1
+ * php: ^8.1
+ * [chubbyphp/chubbyphp-framework][1]: ^5.1
+ * [chubbyphp/chubbyphp-http-exception][2]: ^1.1
+ * [nikic/fast-route][3]: ^1.3
+ * [psr/http-message][4]: ^1.1|^2.0
 
 ## Installation
 
 Through [Composer](http://getcomposer.org) as [chubbyphp/chubbyphp-framework-router-fastroute][10].
 
 ```bash
-composer require chubbyphp/chubbyphp-framework-router-fastroute "^2.0"
+composer require chubbyphp/chubbyphp-framework-router-fastroute "^2.1"
 ```
 
 ## Usage
