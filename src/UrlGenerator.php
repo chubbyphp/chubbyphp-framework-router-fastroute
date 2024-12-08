@@ -132,7 +132,7 @@ final class UrlGenerator implements UrlGeneratorInterface
                 $name,
                 $path,
                 $attributes,
-                new \RuntimeException(sprintf('Missing attribute "%s"', $attribute))
+                new \RuntimeException(\sprintf('Missing attribute "%s"', $attribute))
             );
         }
 
@@ -144,7 +144,7 @@ final class UrlGenerator implements UrlGeneratorInterface
                 $name,
                 $path,
                 $attributes,
-                new \RuntimeException(sprintf(
+                new \RuntimeException(\sprintf(
                     'Not matching value "%s" with pattern "%s" on attribute "%s"',
                     $value,
                     $routePart[1],

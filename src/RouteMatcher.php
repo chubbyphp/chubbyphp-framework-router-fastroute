@@ -38,7 +38,7 @@ final class RouteMatcher implements RouteMatcherInterface
 
         if (Dispatcher::NOT_FOUND === $routeInfo[0]) {
             throw HttpException::createNotFound([
-                'detail' => sprintf(
+                'detail' => \sprintf(
                     'The page "%s" you are looking for could not be found.'
                     .' Check the address bar to ensure your URL is spelled correctly.',
                     $request->getRequestTarget()
@@ -48,7 +48,7 @@ final class RouteMatcher implements RouteMatcherInterface
 
         if (Dispatcher::METHOD_NOT_ALLOWED === $routeInfo[0]) {
             throw HttpException::createMethodNotAllowed([
-                'detail' => sprintf(
+                'detail' => \sprintf(
                     'Method "%s" at path "%s" is not allowed. Must be one of: "%s"',
                     $method,
                     $request->getRequestTarget(),
