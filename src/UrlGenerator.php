@@ -111,9 +111,9 @@ final class UrlGenerator implements UrlGeneratorInterface
         $pathParts = [];
 
         foreach ($routePartSets[$routeIndex] as $routePart) {
-            $pathParts[] = \is_array($routePart) ?
-                $this->getAttributeValue($name, $path, $routePart, $attributes) :
-                $routePart;
+            $pathParts[] = \is_array($routePart)
+                ? $this->getAttributeValue($name, $path, $routePart, $attributes)
+                : $routePart;
         }
 
         return implode('', $pathParts);
