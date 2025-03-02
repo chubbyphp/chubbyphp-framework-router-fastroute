@@ -9,9 +9,8 @@ use Chubbyphp\Framework\Router\Exceptions\RouteGenerationException;
 use Chubbyphp\Framework\Router\FastRoute\UrlGenerator;
 use Chubbyphp\Framework\Router\RouteInterface;
 use Chubbyphp\Framework\Router\RoutesByNameInterface;
-use Chubbyphp\Mock\Call;
-use Chubbyphp\Mock\MockByCallsTrait;
-use PHPUnit\Framework\MockObject\MockObject;
+use Chubbyphp\Mock\MockMethod\WithReturn;
+use Chubbyphp\Mock\MockObjectBuilder;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -23,41 +22,41 @@ use Psr\Http\Message\UriInterface;
  */
 final class UrlGeneratorTest extends TestCase
 {
-    use MockByCallsTrait;
-
     public function testGenerateUri(): void
     {
-        /** @var MockObject|UriInterface $uri */
-        $uri = $this->getMockByCalls(UriInterface::class, [
-            Call::create('getScheme')->with()->willReturn('https'),
-            Call::create('getAuthority')->with()->willReturn('user:password@localhost'),
-            Call::create('getScheme')->with()->willReturn('https'),
-            Call::create('getAuthority')->with()->willReturn('user:password@localhost'),
-            Call::create('getScheme')->with()->willReturn('https'),
-            Call::create('getAuthority')->with()->willReturn('user:password@localhost'),
-            Call::create('getScheme')->with()->willReturn('https'),
-            Call::create('getAuthority')->with()->willReturn('user:password@localhost'),
+        $builder = new MockObjectBuilder();
+
+        /** @var UriInterface $uri */
+        $uri = $builder->create(UriInterface::class, [
+            new WithReturn('getScheme', [], 'https'),
+            new WithReturn('getAuthority', [], 'user:password@localhost'),
+            new WithReturn('getScheme', [], 'https'),
+            new WithReturn('getAuthority', [], 'user:password@localhost'),
+            new WithReturn('getScheme', [], 'https'),
+            new WithReturn('getAuthority', [], 'user:password@localhost'),
+            new WithReturn('getScheme', [], 'https'),
+            new WithReturn('getAuthority', [], 'user:password@localhost'),
         ]);
 
-        /** @var MockObject|ServerRequestInterface $request */
-        $request = $this->getMockByCalls(ServerRequestInterface::class, [
-            Call::create('getUri')->with()->willReturn($uri),
-            Call::create('getUri')->with()->willReturn($uri),
-            Call::create('getUri')->with()->willReturn($uri),
-            Call::create('getUri')->with()->willReturn($uri),
+        /** @var ServerRequestInterface $request */
+        $request = $builder->create(ServerRequestInterface::class, [
+            new WithReturn('getUri', [], $uri),
+            new WithReturn('getUri', [], $uri),
+            new WithReturn('getUri', [], $uri),
+            new WithReturn('getUri', [], $uri),
         ]);
 
-        /** @var MockObject|RouteInterface $route */
-        $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
+        /** @var RouteInterface $route */
+        $route = $builder->create(RouteInterface::class, [
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
         ]);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['user' => $route]),
         ]);
 
         $urlGenerator = new UrlGenerator($routesByName);
@@ -91,22 +90,24 @@ final class UrlGeneratorTest extends TestCase
         $this->expectExceptionMessage('Route generation for route "user" with path "/user/{id:\d+}[/{name}]" with attributes "{}" failed. Missing attribute "id"');
         $this->expectExceptionCode(3);
 
-        /** @var MockObject|UriInterface $uri */
-        $uri = $this->getMockByCalls(UriInterface::class);
+        $builder = new MockObjectBuilder();
 
-        /** @var MockObject|ServerRequestInterface $request */
-        $request = $this->getMockByCalls(ServerRequestInterface::class, [
-            Call::create('getUri')->with()->willReturn($uri),
+        /** @var UriInterface $uri */
+        $uri = $builder->create(UriInterface::class, []);
+
+        /** @var ServerRequestInterface $request */
+        $request = $builder->create(ServerRequestInterface::class, [
+            new WithReturn('getUri', [], $uri),
         ]);
 
-        /** @var MockObject|RouteInterface $route */
-        $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
+        /** @var RouteInterface $route */
+        $route = $builder->create(RouteInterface::class, [
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
         ]);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['user' => $route]),
         ]);
 
         $urlGenerator = new UrlGenerator($routesByName);
@@ -121,22 +122,24 @@ final class UrlGeneratorTest extends TestCase
         );
         $this->expectExceptionCode(3);
 
-        /** @var MockObject|UriInterface $uri */
-        $uri = $this->getMockByCalls(UriInterface::class);
+        $builder = new MockObjectBuilder();
 
-        /** @var MockObject|ServerRequestInterface $request */
-        $request = $this->getMockByCalls(ServerRequestInterface::class, [
-            Call::create('getUri')->with()->willReturn($uri),
+        /** @var UriInterface $uri */
+        $uri = $builder->create(UriInterface::class, []);
+
+        /** @var ServerRequestInterface $request */
+        $request = $builder->create(ServerRequestInterface::class, [
+            new WithReturn('getUri', [], $uri),
         ]);
 
-        /** @var MockObject|RouteInterface $route */
-        $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
+        /** @var RouteInterface $route */
+        $route = $builder->create(RouteInterface::class, [
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
         ]);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['user' => $route]),
         ]);
 
         $urlGenerator = new UrlGenerator($routesByName);
@@ -145,37 +148,39 @@ final class UrlGeneratorTest extends TestCase
 
     public function testGenerateUriWithBasePath(): void
     {
-        /** @var MockObject|UriInterface $uri */
-        $uri = $this->getMockByCalls(UriInterface::class, [
-            Call::create('getScheme')->with()->willReturn('https'),
-            Call::create('getAuthority')->with()->willReturn('user:password@localhost'),
-            Call::create('getScheme')->with()->willReturn('https'),
-            Call::create('getAuthority')->with()->willReturn('user:password@localhost'),
-            Call::create('getScheme')->with()->willReturn('https'),
-            Call::create('getAuthority')->with()->willReturn('user:password@localhost'),
-            Call::create('getScheme')->with()->willReturn('https'),
-            Call::create('getAuthority')->with()->willReturn('user:password@localhost'),
+        $builder = new MockObjectBuilder();
+
+        /** @var UriInterface $uri */
+        $uri = $builder->create(UriInterface::class, [
+            new WithReturn('getScheme', [], 'https'),
+            new WithReturn('getAuthority', [], 'user:password@localhost'),
+            new WithReturn('getScheme', [], 'https'),
+            new WithReturn('getAuthority', [], 'user:password@localhost'),
+            new WithReturn('getScheme', [], 'https'),
+            new WithReturn('getAuthority', [], 'user:password@localhost'),
+            new WithReturn('getScheme', [], 'https'),
+            new WithReturn('getAuthority', [], 'user:password@localhost'),
         ]);
 
-        /** @var MockObject|ServerRequestInterface $request */
-        $request = $this->getMockByCalls(ServerRequestInterface::class, [
-            Call::create('getUri')->with()->willReturn($uri),
-            Call::create('getUri')->with()->willReturn($uri),
-            Call::create('getUri')->with()->willReturn($uri),
-            Call::create('getUri')->with()->willReturn($uri),
+        /** @var ServerRequestInterface $request */
+        $request = $builder->create(ServerRequestInterface::class, [
+            new WithReturn('getUri', [], $uri),
+            new WithReturn('getUri', [], $uri),
+            new WithReturn('getUri', [], $uri),
+            new WithReturn('getUri', [], $uri),
         ]);
 
-        /** @var MockObject|RouteInterface $route */
-        $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
+        /** @var RouteInterface $route */
+        $route = $builder->create(RouteInterface::class, [
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
         ]);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['user' => $route]),
         ]);
 
         $urlGenerator = new UrlGenerator($routesByName, '/path/to/directory');
@@ -208,9 +213,11 @@ final class UrlGeneratorTest extends TestCase
         $this->expectException(MissingRouteByNameException::class);
         $this->expectExceptionMessage('Missing route: "user"');
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn([]),
+        $builder = new MockObjectBuilder();
+
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], []),
         ]);
 
         $urlGenerator = new UrlGenerator($routesByName);
@@ -219,17 +226,19 @@ final class UrlGeneratorTest extends TestCase
 
     public function testGeneratePath(): void
     {
-        /** @var MockObject|RouteInterface $route */
-        $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
+        $builder = new MockObjectBuilder();
+
+        /** @var RouteInterface $route */
+        $route = $builder->create(RouteInterface::class, [
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
         ]);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['user' => $route]),
         ]);
 
         $urlGenerator = new UrlGenerator($routesByName);
@@ -252,14 +261,16 @@ final class UrlGeneratorTest extends TestCase
         $this->expectException(RouteGenerationException::class);
         $this->expectExceptionMessage('Route generation for route "user" with path "/user/{id:\d+}[/{name}]" with attributes "{}" failed. Missing attribute "id"');
 
-        /** @var MockObject|RouteInterface $route */
-        $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
+        $builder = new MockObjectBuilder();
+
+        /** @var RouteInterface $route */
+        $route = $builder->create(RouteInterface::class, [
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
         ]);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['user' => $route]),
         ]);
 
         $urlGenerator = new UrlGenerator($routesByName);
@@ -268,17 +279,19 @@ final class UrlGeneratorTest extends TestCase
 
     public function testGeneratePathWithBasePath(): void
     {
-        /** @var MockObject|RouteInterface $route */
-        $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
-            Call::create('getPath')->with()->willReturn('/user/{id:\d+}[/{name}]'),
+        $builder = new MockObjectBuilder();
+
+        /** @var RouteInterface $route */
+        $route = $builder->create(RouteInterface::class, [
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
+            new WithReturn('getPath', [], '/user/{id:\d+}[/{name}]'),
         ]);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['user' => $route]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['user' => $route]),
         ]);
 
         $urlGenerator = new UrlGenerator($routesByName, '/path/to/directory');
