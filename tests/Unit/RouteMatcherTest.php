@@ -8,9 +8,9 @@ use Chubbyphp\Framework\Router\FastRoute\RouteMatcher;
 use Chubbyphp\Framework\Router\RouteInterface;
 use Chubbyphp\Framework\Router\RoutesByNameInterface;
 use Chubbyphp\HttpException\HttpException;
-use Chubbyphp\Mock\Call;
-use Chubbyphp\Mock\MockByCallsTrait;
-use PHPUnit\Framework\MockObject\MockObject;
+use Chubbyphp\Mock\MockMethod\WithReturn;
+use Chubbyphp\Mock\MockMethod\WithReturnSelf;
+use Chubbyphp\Mock\MockObjectBuilder;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -22,45 +22,45 @@ use Psr\Http\Message\UriInterface;
  */
 final class RouteMatcherTest extends TestCase
 {
-    use MockByCallsTrait;
-
     public const UUID_PATTERN = '[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}';
 
     public function testMatchFound(): void
     {
-        /** @var MockObject|UriInterface $uri */
-        $uri = $this->getMockByCalls(UriInterface::class, [
-            Call::create('getPath')->with()->willReturn('/api/pets'),
+        $builder = new MockObjectBuilder();
+
+        /** @var UriInterface $uri */
+        $uri = $builder->create(UriInterface::class, [
+            new WithReturn('getPath', [], '/api/pets'),
         ]);
 
-        /** @var MockObject|ServerRequestInterface $request */
-        $request = $this->getMockByCalls(ServerRequestInterface::class, [
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getUri')->with()->willReturn($uri),
+        /** @var ServerRequestInterface $request */
+        $request = $builder->create(ServerRequestInterface::class, [
+            new WithReturn('getMethod', [], 'GET'),
+            new WithReturn('getUri', [], $uri),
         ]);
 
-        /** @var MockObject|RouteInterface $route1 */
-        $route1 = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getMethod')->with()->willReturn('POST'),
-            Call::create('getPath')->with()->willReturn('/api/pets'),
-            Call::create('getName')->with()->willReturn('pet_create'),
+        /** @var RouteInterface $route1 */
+        $route1 = $builder->create(RouteInterface::class, [
+            new WithReturn('getMethod', [], 'POST'),
+            new WithReturn('getPath', [], '/api/pets'),
+            new WithReturn('getName', [], 'pet_create'),
         ]);
 
-        /** @var MockObject|RouteInterface $route2 */
-        $route2 = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/api/pets'),
-            Call::create('getName')->with()->willReturn('pet_list'),
-            Call::create('withAttributes')->with([])->willReturnSelf(),
+        /** @var RouteInterface $route2 */
+        $route2 = $builder->create(RouteInterface::class, [
+            new WithReturn('getMethod', [], 'GET'),
+            new WithReturn('getPath', [], '/api/pets'),
+            new WithReturn('getName', [], 'pet_list'),
+            new WithReturnSelf('withAttributes', [[]]),
         ]);
 
         $cacheFile = sys_get_temp_dir().'/fast-route-'.uniqid().uniqid().'.php';
 
         self::assertFileDoesNotExist($cacheFile);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['pet_create' => $route1, 'pet_list' => $route2]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['pet_create' => $route1, 'pet_list' => $route2]),
         ]);
 
         $routeMatcher = new RouteMatcher($routesByName, $cacheFile);
@@ -74,28 +74,30 @@ final class RouteMatcherTest extends TestCase
 
     public function testMatchNotFound(): void
     {
-        /** @var MockObject|UriInterface $uri */
-        $uri = $this->getMockByCalls(UriInterface::class, [
-            Call::create('getPath')->with()->willReturn('/'),
+        $builder = new MockObjectBuilder();
+
+        /** @var UriInterface $uri */
+        $uri = $builder->create(UriInterface::class, [
+            new WithReturn('getPath', [], '/'),
         ]);
 
-        /** @var MockObject|ServerRequestInterface $request */
-        $request = $this->getMockByCalls(ServerRequestInterface::class, [
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getUri')->with()->willReturn($uri),
-            Call::create('getRequestTarget')->with()->willReturn('/'),
+        /** @var ServerRequestInterface $request */
+        $request = $builder->create(ServerRequestInterface::class, [
+            new WithReturn('getMethod', [], 'GET'),
+            new WithReturn('getUri', [], $uri),
+            new WithReturn('getRequestTarget', [], '/'),
         ]);
 
-        /** @var MockObject|RouteInterface $route */
-        $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/api/pets'),
-            Call::create('getName')->with()->willReturn('pet_list'),
+        /** @var RouteInterface $route */
+        $route = $builder->create(RouteInterface::class, [
+            new WithReturn('getMethod', [], 'GET'),
+            new WithReturn('getPath', [], '/api/pets'),
+            new WithReturn('getName', [], 'pet_list'),
         ]);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['pet_list' => $route]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['pet_list' => $route]),
         ]);
 
         $routeMatcher = new RouteMatcher($routesByName);
@@ -118,28 +120,30 @@ final class RouteMatcherTest extends TestCase
 
     public function testMatchMethodNotAllowed(): void
     {
-        /** @var MockObject|UriInterface $uri */
-        $uri = $this->getMockByCalls(UriInterface::class, [
-            Call::create('getPath')->with()->willReturn('/api/pets'),
+        $builder = new MockObjectBuilder();
+
+        /** @var UriInterface $uri */
+        $uri = $builder->create(UriInterface::class, [
+            new WithReturn('getPath', [], '/api/pets'),
         ]);
 
-        /** @var MockObject|ServerRequestInterface $request */
-        $request = $this->getMockByCalls(ServerRequestInterface::class, [
-            Call::create('getMethod')->with()->willReturn('POST'),
-            Call::create('getUri')->with()->willReturn($uri),
-            Call::create('getRequestTarget')->with()->willReturn('/api/pets?offset=1&limit=20'),
+        /** @var ServerRequestInterface $request */
+        $request = $builder->create(ServerRequestInterface::class, [
+            new WithReturn('getMethod', [], 'POST'),
+            new WithReturn('getUri', [], $uri),
+            new WithReturn('getRequestTarget', [], '/api/pets?offset=1&limit=20'),
         ]);
 
-        /** @var MockObject|RouteInterface $route */
-        $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/api/pets'),
-            Call::create('getName')->with()->willReturn('pet_list'),
+        /** @var RouteInterface $route */
+        $route = $builder->create(RouteInterface::class, [
+            new WithReturn('getMethod', [], 'GET'),
+            new WithReturn('getPath', [], '/api/pets'),
+            new WithReturn('getName', [], 'pet_list'),
         ]);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['pet_list' => $route]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['pet_list' => $route]),
         ]);
 
         $routeMatcher = new RouteMatcher($routesByName);
@@ -162,28 +166,30 @@ final class RouteMatcherTest extends TestCase
 
     public function testMatchWithTokensNotMatch(): void
     {
-        /** @var MockObject|UriInterface $uri */
-        $uri = $this->getMockByCalls(UriInterface::class, [
-            Call::create('getPath')->with()->willReturn('/api/pets/1'),
+        $builder = new MockObjectBuilder();
+
+        /** @var UriInterface $uri */
+        $uri = $builder->create(UriInterface::class, [
+            new WithReturn('getPath', [], '/api/pets/1'),
         ]);
 
-        /** @var MockObject|ServerRequestInterface $request */
-        $request = $this->getMockByCalls(ServerRequestInterface::class, [
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getUri')->with()->willReturn($uri),
-            Call::create('getRequestTarget')->with()->willReturn('/api/pets/1'),
+        /** @var ServerRequestInterface $request */
+        $request = $builder->create(ServerRequestInterface::class, [
+            new WithReturn('getMethod', [], 'GET'),
+            new WithReturn('getUri', [], $uri),
+            new WithReturn('getRequestTarget', [], '/api/pets/1'),
         ]);
 
-        /** @var MockObject|RouteInterface $route */
-        $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/api/pets/{id:'.self::UUID_PATTERN.'}'),
-            Call::create('getName')->with()->willReturn('pet_read'),
+        /** @var RouteInterface $route */
+        $route = $builder->create(RouteInterface::class, [
+            new WithReturn('getMethod', [], 'GET'),
+            new WithReturn('getPath', [], '/api/pets/{id:'.self::UUID_PATTERN.'}'),
+            new WithReturn('getName', [], 'pet_read'),
         ]);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['pet_read' => $route]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['pet_read' => $route]),
         ]);
 
         $routeMatcher = new RouteMatcher($routesByName);
@@ -206,28 +212,30 @@ final class RouteMatcherTest extends TestCase
 
     public function testMatchWithTokensMatch(): void
     {
-        /** @var MockObject|UriInterface $uri */
-        $uri = $this->getMockByCalls(UriInterface::class, [
-            Call::create('getPath')->with()->willReturn('/api/pets/8b72750c-5306-416c-bba7-5b41f1c44791'),
+        $builder = new MockObjectBuilder();
+
+        /** @var UriInterface $uri */
+        $uri = $builder->create(UriInterface::class, [
+            new WithReturn('getPath', [], '/api/pets/8b72750c-5306-416c-bba7-5b41f1c44791'),
         ]);
 
-        /** @var MockObject|ServerRequestInterface $request */
-        $request = $this->getMockByCalls(ServerRequestInterface::class, [
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getUri')->with()->willReturn($uri),
+        /** @var ServerRequestInterface $request */
+        $request = $builder->create(ServerRequestInterface::class, [
+            new WithReturn('getMethod', [], 'GET'),
+            new WithReturn('getUri', [], $uri),
         ]);
 
-        /** @var MockObject|RouteInterface $route */
-        $route = $this->getMockByCalls(RouteInterface::class, [
-            Call::create('getMethod')->with()->willReturn('GET'),
-            Call::create('getPath')->with()->willReturn('/api/pets/{id:'.self::UUID_PATTERN.'}'),
-            Call::create('getName')->with()->willReturn('pet_read'),
-            Call::create('withAttributes')->with(['id' => '8b72750c-5306-416c-bba7-5b41f1c44791'])->willReturnSelf(),
+        /** @var RouteInterface $route */
+        $route = $builder->create(RouteInterface::class, [
+            new WithReturn('getMethod', [], 'GET'),
+            new WithReturn('getPath', [], '/api/pets/{id:'.self::UUID_PATTERN.'}'),
+            new WithReturn('getName', [], 'pet_read'),
+            new WithReturnSelf('withAttributes', [['id' => '8b72750c-5306-416c-bba7-5b41f1c44791']]),
         ]);
 
-        /** @var MockObject|RoutesByNameInterface $routesByName */
-        $routesByName = $this->getMockByCalls(RoutesByNameInterface::class, [
-            Call::create('getRoutesByName')->with()->willReturn(['pet_read' => $route]),
+        /** @var RoutesByNameInterface $routesByName */
+        $routesByName = $builder->create(RoutesByNameInterface::class, [
+            new WithReturn('getRoutesByName', [], ['pet_read' => $route]),
         ]);
 
         $routeMatcher = new RouteMatcher($routesByName);
