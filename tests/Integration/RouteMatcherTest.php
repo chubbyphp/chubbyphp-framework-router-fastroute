@@ -18,6 +18,7 @@ use Laminas\Diactoros\ResponseFactory as LaminasResponseFactory;
 use Laminas\Diactoros\ServerRequestFactory as LaminasServerRequestFactory;
 use Nyholm\Psr7\Factory\Psr17Factory as NyholmResponseFactory;
 use Nyholm\Psr7\Factory\Psr17Factory as NyholmServerRequestFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
@@ -34,9 +35,7 @@ use Sunrise\Http\Message\ServerRequestFactory as SunriseServerRequestFactory;
  */
 final class RouteMatcherTest extends TestCase
 {
-    /**
-     * @dataProvider providePsr7Implementations
-     */
+    #[DataProvider('providePsr7Implementations')]
     public function testOk(
         ResponseFactoryInterface $responseFactory,
         ServerRequestFactoryInterface $serverRequestFactory
@@ -67,9 +66,7 @@ final class RouteMatcherTest extends TestCase
         self::assertSame('Hello, test', (string) $response->getBody());
     }
 
-    /**
-     * @dataProvider providePsr7Implementations
-     */
+    #[DataProvider('providePsr7Implementations')]
     public function testTestNotFound(
         ResponseFactoryInterface $responseFactory,
         ServerRequestFactoryInterface $serverRequestFactory
@@ -103,9 +100,7 @@ final class RouteMatcherTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider providePsr7Implementations
-     */
+    #[DataProvider('providePsr7Implementations')]
     public function testMethodNotAllowed(
         ResponseFactoryInterface $responseFactory,
         ServerRequestFactoryInterface $serverRequestFactory
@@ -139,9 +134,7 @@ final class RouteMatcherTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider providePsr7Implementations
-     */
+    #[DataProvider('providePsr7Implementations')]
     public function testException(
         ResponseFactoryInterface $responseFactory,
         ServerRequestFactoryInterface $serverRequestFactory
@@ -172,9 +165,7 @@ final class RouteMatcherTest extends TestCase
         self::assertStringContainsString('Something went wrong', $body);
     }
 
-    /**
-     * @dataProvider providePsr7Implementations
-     */
+    #[DataProvider('providePsr7Implementations')]
     public function testExceptionWithoutExceptionMiddleware(
         ResponseFactoryInterface $responseFactory,
         ServerRequestFactoryInterface $serverRequestFactory
