@@ -95,7 +95,7 @@ final class RouteMatcherTest extends TestCase
 
         self::assertSame(404, $response->getStatusCode());
         self::assertStringContainsString(
-            'The page "/hello" you are looking for could not be found.',
+            'The path "/hello" you are looking for could not be found.',
             (string) $response->getBody()
         );
     }

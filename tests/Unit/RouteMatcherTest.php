@@ -85,7 +85,6 @@ final class RouteMatcherTest extends TestCase
         $request = $builder->create(ServerRequestInterface::class, [
             new WithReturn('getMethod', [], 'GET'),
             new WithReturn('getUri', [], $uri),
-            new WithReturn('getRequestTarget', [], '/'),
         ]);
 
         /** @var RouteInterface $route */
@@ -112,7 +111,7 @@ final class RouteMatcherTest extends TestCase
                 'type' => 'https://datatracker.ietf.org/doc/html/rfc2616#section-10.4.5',
                 'status' => 404,
                 'title' => 'Not Found',
-                'detail' => 'The page "/" you are looking for could not be found. Check the address bar to ensure your URL is spelled correctly.',
+                'detail' => 'The path "/" you are looking for could not be found.',
                 'instance' => null,
             ], $e->jsonSerialize());
         }
@@ -131,7 +130,6 @@ final class RouteMatcherTest extends TestCase
         $request = $builder->create(ServerRequestInterface::class, [
             new WithReturn('getMethod', [], 'POST'),
             new WithReturn('getUri', [], $uri),
-            new WithReturn('getRequestTarget', [], '/api/pets?offset=1&limit=20'),
         ]);
 
         /** @var RouteInterface $route */
@@ -158,7 +156,7 @@ final class RouteMatcherTest extends TestCase
                 'type' => 'https://datatracker.ietf.org/doc/html/rfc2616#section-10.4.6',
                 'status' => 405,
                 'title' => 'Method Not Allowed',
-                'detail' => 'Method "POST" at path "/api/pets?offset=1&limit=20" is not allowed. Must be one of: "GET"',
+                'detail' => 'Method "POST" at path "/api/pets" is not allowed. Must be one of: "GET"',
                 'instance' => null,
             ], $e->jsonSerialize());
         }
@@ -177,7 +175,6 @@ final class RouteMatcherTest extends TestCase
         $request = $builder->create(ServerRequestInterface::class, [
             new WithReturn('getMethod', [], 'GET'),
             new WithReturn('getUri', [], $uri),
-            new WithReturn('getRequestTarget', [], '/api/pets/1'),
         ]);
 
         /** @var RouteInterface $route */
@@ -204,7 +201,7 @@ final class RouteMatcherTest extends TestCase
                 'type' => 'https://datatracker.ietf.org/doc/html/rfc2616#section-10.4.5',
                 'status' => 404,
                 'title' => 'Not Found',
-                'detail' => 'The page "/api/pets/1" you are looking for could not be found. Check the address bar to ensure your URL is spelled correctly.',
+                'detail' => 'The path "/api/pets/1" you are looking for could not be found.',
                 'instance' => null,
             ], $e->jsonSerialize());
         }

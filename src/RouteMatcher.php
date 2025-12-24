@@ -32,16 +32,15 @@ final class RouteMatcher implements RouteMatcherInterface
     public function match(ServerRequestInterface $request): RouteInterface
     {
         $method = $request->getMethod();
-        $path = rawurldecode($request->getUri()->getPath());
+        $path = $request->getUri()->getPath();
 
-        $routeInfo = $this->dispatcher->dispatch($method, $path);
+        $routeInfo = $this->dispatcher->dispatch($method, rawurldecode($path));
 
         if (Dispatcher::NOT_FOUND === $routeInfo[0]) {
             throw HttpException::createNotFound([
                 'detail' => \sprintf(
-                    'The page "%s" you are looking for could not be found.'
-                    .' Check the address bar to ensure your URL is spelled correctly.',
-                    $request->getRequestTarget()
+                    'The path "%s" you are looking for could not be found.',
+                    $path
                 ),
             ]);
         }
@@ -51,7 +50,7 @@ final class RouteMatcher implements RouteMatcherInterface
                 'detail' => \sprintf(
                     'Method "%s" at path "%s" is not allowed. Must be one of: "%s"',
                     $method,
-                    $request->getRequestTarget(),
+                    $path,
                     implode('", "', $routeInfo[1]),
                 ),
             ]);
