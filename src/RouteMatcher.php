@@ -19,9 +19,9 @@ final class RouteMatcher implements RouteMatcherInterface
     /**
      * @var array<string, RouteInterface>
      */
-    private array $routesByName;
+    private readonly array $routesByName;
 
-    private Dispatcher $dispatcher;
+    private readonly Dispatcher $dispatcher;
 
     public function __construct(RoutesByNameInterface $routes, ?string $cacheFile = null)
     {

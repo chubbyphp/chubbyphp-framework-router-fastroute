@@ -17,9 +17,9 @@ final class UrlGenerator implements UrlGeneratorInterface
     /**
      * @var array<string, RouteInterface>
      */
-    private array $routesByName;
+    private readonly array $routesByName;
 
-    private RouteParser $routeParser;
+    private readonly RouteParser $routeParser;
 
     public function __construct(RoutesByNameInterface $routes, private string $basePath = '')
     {
