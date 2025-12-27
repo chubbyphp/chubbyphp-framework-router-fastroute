@@ -21,7 +21,7 @@ final class UrlGenerator implements UrlGeneratorInterface
 
     private readonly RouteParser $routeParser;
 
-    public function __construct(RoutesByNameInterface $routes, private string $basePath = '')
+    public function __construct(RoutesByNameInterface $routes, private readonly string $basePath = '')
     {
         $this->routesByName = $routes->getRoutesByName();
         $this->routeParser = new RouteParser();
