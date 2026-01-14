@@ -46,20 +46,29 @@ final class RouteMatcher implements RouteMatcherInterface
         }
 
         if (Dispatcher::METHOD_NOT_ALLOWED === $routeInfo[0]) {
+            /** @var array<string> */
+            $allowedMethods = $routeInfo[1];
+
             throw HttpException::createMethodNotAllowed([
                 'detail' => \sprintf(
                     'Method "%s" at path "%s" is not allowed. Must be one of: "%s"',
                     $method,
                     $path,
-                    implode('", "', $routeInfo[1]),
+                    implode('", "', $allowedMethods),
                 ),
             ]);
         }
 
-        /** @var RouteInterface $route */
-        $route = $this->routesByName[$routeInfo[1]];
+        /** @var string $routeName */
+        $routeName = $routeInfo[1];
 
-        return $route->withAttributes($routeInfo[2]);
+        /** @var RouteInterface $route */
+        $route = $this->routesByName[$routeName];
+
+        /** @var array<string, string> */
+        $attributes = $routeInfo[2];
+
+        return $route->withAttributes($attributes);
     }
 
     private function getDispatcher(?string $cacheFile = null): Dispatcher

@@ -53,10 +53,9 @@ final class UrlGenerator implements UrlGeneratorInterface
         $routePath = $route->getPath();
 
         $routePartSets = array_reverse($this->routeParser->parse($routePath));
+        $routeParts = $this->findMatchingRouteParts($routePartSets, $attributes);
 
-        $routeIndex = $this->getRouteIndex($routePartSets, $attributes);
-
-        $path = $this->generatePathFromAttributes($name, $routePath, $routePartSets, $attributes, $routeIndex);
+        $path = $this->buildPath($name, $routePath, $routeParts, $attributes);
 
         if ([] === $queryParams) {
             return $this->basePath.$path;
@@ -75,42 +74,46 @@ final class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @param array<int, array<int, array|string>> $routePartSets
-     * @param array<string>                        $attributes
+     * @param array<int, array<int, array<int, string>|string>> $routePartSets
+     * @param array<string>                                     $attributes
+     *
+     * @return array<int, array<int, string>|string>
      */
-    private function getRouteIndex(array $routePartSets, array $attributes): int
+    private function findMatchingRouteParts(array $routePartSets, array $attributes): array
     {
-        foreach ($routePartSets as $routeIndex => $routeParts) {
-            foreach ($routeParts as $routePart) {
-                if (\is_array($routePart)) {
-                    $parameter = $routePart[0];
-
-                    if (!isset($attributes[$parameter])) {
-                        continue 2;
-                    }
-                }
+        foreach ($routePartSets as $routeParts) {
+            if ($this->hasAllRequiredAttributes($routeParts, $attributes)) {
+                return $routeParts;
             }
-
-            return $routeIndex;
         }
 
-        return $routeIndex;
+        return end($routePartSets) ?: [];
     }
 
     /**
-     * @param array<int, array<int, array|string>> $routePartSets
-     * @param array<string>                        $attributes
+     * @param array<int, array<int, string>|string> $routeParts
+     * @param array<string>                         $attributes
      */
-    private function generatePathFromAttributes(
-        string $name,
-        string $path,
-        array $routePartSets,
-        array $attributes,
-        int $routeIndex
-    ): string {
+    private function hasAllRequiredAttributes(array $routeParts, array $attributes): bool
+    {
+        foreach ($routeParts as $routePart) {
+            if (\is_array($routePart) && !isset($attributes[$routePart[0]])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array<int, array<int, string>|string> $routeParts
+     * @param array<string>                         $attributes
+     */
+    private function buildPath(string $name, string $path, array $routeParts, array $attributes): string
+    {
         $pathParts = [];
 
-        foreach ($routePartSets[$routeIndex] as $routePart) {
+        foreach ($routeParts as $routePart) {
             $pathParts[] = \is_array($routePart)
                 ? $this->getAttributeValue($name, $path, $routePart, $attributes)
                 : $routePart;
