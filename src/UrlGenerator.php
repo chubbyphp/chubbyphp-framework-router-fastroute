@@ -52,6 +52,7 @@ final class UrlGenerator implements UrlGeneratorInterface
         $route = $this->getRoute($name);
         $routePath = $route->getPath();
 
+        /** @var list<list<list<string>|string>> $routePartSets */
         $routePartSets = array_reverse($this->routeParser->parse($routePath));
         $routeParts = $this->findMatchingRouteParts($routePartSets, $attributes);
 
@@ -74,10 +75,10 @@ final class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @param array<int, array<int, array<int, string>|string>> $routePartSets
-     * @param array<string>                                     $attributes
+     * @param list<list<list<string>|string>> $routePartSets
+     * @param array<string>                   $attributes
      *
-     * @return array<int, array<int, string>|string>
+     * @return list<list<string>|string>
      */
     private function findMatchingRouteParts(array $routePartSets, array $attributes): array
     {
@@ -91,8 +92,8 @@ final class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @param array<int, array<int, string>|string> $routeParts
-     * @param array<string>                         $attributes
+     * @param list<list<string>|string> $routeParts
+     * @param array<string>             $attributes
      */
     private function hasAllRequiredAttributes(array $routeParts, array $attributes): bool
     {
@@ -106,8 +107,8 @@ final class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @param array<int, array<int, string>|string> $routeParts
-     * @param array<string>                         $attributes
+     * @param list<list<string>|string> $routeParts
+     * @param array<string>             $attributes
      */
     private function buildPath(string $name, string $path, array $routeParts, array $attributes): string
     {
@@ -123,8 +124,8 @@ final class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @param array<int, string> $routePart
-     * @param array<string>      $attributes
+     * @param list<string>  $routePart
+     * @param array<string> $attributes
      */
     private function getAttributeValue(string $name, string $path, array $routePart, array $attributes): string
     {
